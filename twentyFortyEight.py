@@ -83,21 +83,21 @@ class TwentyFortyEight(object):
         return string
 
 def northSouthTest():
-    twenty = twentyFortyEight()
+    twenty = TwentyFortyEight()
     twenty.move('S')
     twenty.move('N')
     assert twenty.score == 4
     assert twenty.board == [[4,0,0,0],[2,0,0,0],[0,0,0,0],[0,0,0,0]]
 
 def eastWestTest():
-    twenty = twentyFortyEight()
+    twenty = TwentyFortyEight()
     twenty.move('E')
     twenty.move('W')
     assert twenty.score == 4
     assert twenty.board == [[4,0,0,0],[2,0,0,0],[0,0,0,0],[0,0,0,0]]    
 
 def longTest():
-    twenty = twentyFortyEight()
+    twenty = TwentyFortyEight()
     twenty.move('E')
     twenty.move('E')
     twenty.move('S')

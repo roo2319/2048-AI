@@ -19,7 +19,7 @@ class TwentyFortyEight(object):
         #We will assume that in the case of a NORTH movement that the northmost tiles
         #Combine, In the case of ambiguity in combinations.
         board = map(list,self.board)
-        if (direction == 'N'):
+        if (direction == 'W'):
             for i in range(len(board)):
                 #In line, the earlist element is closest to the side we are pushing it to.
                 line = [board[0][i],board[1][i],board[2][i],board[3][i]]
@@ -31,12 +31,12 @@ class TwentyFortyEight(object):
                 line = [board[3][i],board[2][i],board[1][i],board[0][i]]
                 line = self.__crush(self.__slide(self.__crush(line)))
                 board[3][i],board[2][i],board[1][i],board[0][i] = line[0],line[1],line[2],line[3]
-        elif (direction == 'W'):
+        elif (direction == 'A'):
             for i in range(len(board)):
                 line = [board[i][0],board[i][1],board[i][2],board[i][3]]
                 line = self.__crush(self.__slide(self.__crush(line)))
                 board[i][0],board[i][1],board[i][2],board[i][3] = line[0],line[1],line[2],line[3]
-        elif (direction == 'E'):
+        elif (direction == 'D'):
             for i in range(len(board)):
                 line = [board[i][3],board[i][2],board[i][1],board[i][0]]
                 line = self.__crush(self.__slide(self.__crush(line)))
@@ -85,24 +85,24 @@ class TwentyFortyEight(object):
 def northSouthTest():
     twenty = TwentyFortyEight()
     twenty.move('S')
-    twenty.move('N')
+    twenty.move('W')
     assert twenty.score == 4
     assert twenty.board == [[4,0,0,0],[2,0,0,0],[0,0,0,0],[0,0,0,0]]
 
 def eastWestTest():
     twenty = TwentyFortyEight()
-    twenty.move('E')
-    twenty.move('W')
+    twenty.move('D')
+    twenty.move('A')
     assert twenty.score == 4
     assert twenty.board == [[4,0,0,0],[2,0,0,0],[0,0,0,0],[0,0,0,0]]    
 
 def longTest():
     twenty = TwentyFortyEight()
-    twenty.move('E')
-    twenty.move('E')
+    twenty.move('D')
+    twenty.move('D')
     twenty.move('S')
     twenty.move('S')
-    twenty.move('W')
+    twenty.move('A')
     twenty.move('S')
     twenty.move('S')
     assert twenty.score == 20

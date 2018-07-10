@@ -72,15 +72,18 @@ def test():
 def main():
     root = Tree()
     root.makeNDeep(5)
-    for i in range(100):
+    for i in range(50):
         root.make1Deeper()
         root.setBestScore()
-        for i in range(len(root.children)):
-            if (root.children[i].bestscore == root.bestscore):
-                print "ControlSend, , {}, 2048, , ,".format(root.children[i].move)
-                root = root.children[i]
+        for j in range(len(root.children)):
+            if (root.children[j].bestscore == root.bestscore):
+                print "ControlSend, , {}, 2048, , ,".format(root.children[j].move)
+                print "Sleep, 100"
+                print ";" + str(i)
+                print root.state
+                root = root.children[j]
                 break
-    print root.state
+    
 if __name__ == '__main__':
     main()
 

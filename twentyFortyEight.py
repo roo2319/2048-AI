@@ -21,26 +21,26 @@ class TwentyFortyEight(object):
         board = map(list,self.board)
         if (direction == 'W'):
             for i in range(len(board)):
-                #In line, the earlist element is closest to the side we are pushing it to.
-                line = [board[0][i],board[1][i],board[2][i],board[3][i]]
+                #In line, the earlist element is closest to the side we are pushing it to. 
+                line = [(board[0][i],False),(board[1][i],False),(board[2][i],False),(board[3][i],False)]
                 #Crush, slide, crush.
                 line = self.__crush(self.__slide(self.__crush(line)))
-                board[0][i],board[1][i],board[2][i],board[3][i] = line[0],line[1],line[2],line[3]
+                board[0][i],board[1][i],board[2][i],board[3][i] = line[0][0],line[1][0],line[2][0],line[3][0]
         elif (direction == 'S'):
             for i in range(len(board)):
-                line = [board[3][i],board[2][i],board[1][i],board[0][i]]
+                line = [(board[3][i],False),(board[2][i],False),(board[1][i],False),(board[0][i],False)]
                 line = self.__crush(self.__slide(self.__crush(line)))
-                board[3][i],board[2][i],board[1][i],board[0][i] = line[0],line[1],line[2],line[3]
+                board[3][i],board[2][i],board[1][i],board[0][i] = line[0][0],line[1][0],line[2][0],line[3][0]
         elif (direction == 'A'):
             for i in range(len(board)):
-                line = [board[i][0],board[i][1],board[i][2],board[i][3]]
+                line = [(board[i][0],False),(board[i][1],False),(board[i][2],False),(board[i][3],False)]
                 line = self.__crush(self.__slide(self.__crush(line)))
-                board[i][0],board[i][1],board[i][2],board[i][3] = line[0],line[1],line[2],line[3]
+                board[i][0],board[i][1],board[i][2],board[i][3] = line[0][0],line[1][0],line[2][0],line[3][0]
         elif (direction == 'D'):
             for i in range(len(board)):
-                line = [board[i][3],board[i][2],board[i][1],board[i][0]]
+                line = [(board[i][3],False),(board[i][2],False),(board[i][1],False),(board[i][0],False)]
                 line = self.__crush(self.__slide(self.__crush(line)))
-                board[i][3],board[i][2],board[i][1],board[i][0] = line[0],line[1],line[2],line[3]
+                board[i][3],board[i][2],board[i][1],board[i][0] = line[0][0],line[1][0],line[2][0],line[3][0]
 
         if (self.board == board):
             self.stuck = True
@@ -49,24 +49,24 @@ class TwentyFortyEight(object):
             self.__addNewPiece()
 
     def __crush(self,line):
-        if line[0] == line[1] and line[1] != 0:
-            line = [line[0]*2,line[2],line[3],0]
-            self.score += line[0]
+        if line[0][0] == line[1][0] and line[1][0] != 0 and not(line[0][1]) and not(line[1][1]):
+            line = [(line[0][0]*2,True),(line[2][0],False),(line[3][0],False),(0,False)]
+            self.score += line[0][0]
             line = self.__crush(line)
-        elif line[1] == line[2] and line[1] != 0:
-            line = [line[0],line[1]*2,line[3],0]
-            self.score += line[1]
+        elif line[1][0] == line[2][0] and line[1][0] != 0 and not(line[1][1]) and not(line[2][1]):
+            line = [(line[0][0],False),(line[1][0]*2,True),(line[3][0],False),(0,False)]
+            self.score += line[1][0]
             line = self.__crush(line)
-        elif line[2] == line[3] and line[2] != 0:
-            line = [line[0],line[1],line[2]*2,0]
-            self.score += line[2]
+        elif line[2][0] == line[3][0] and line[2][0] != 0 and not(line[2][1]) and not(line[3][1]):
+            line = [(line[0][0],False),(line[1][0],False),(line[2][0]*2,True),(0,False)]
+            self.score += line[2][0]
             line = self.__crush(line)
         return line
 
     def __slide(self,line):
-        line = filter(lambda num: num != 0,line)
+        line = filter(lambda t: t[0] != 0,line)
         while len(line) != 4:
-            line.append(0)
+            line.append((0,False))
         return line
 
     def __addNewPiece(self):

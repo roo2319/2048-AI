@@ -78,11 +78,10 @@ def main():
         for j in range(len(root.children)):
             if (root.children[j].bestscore == root.bestscore):
                 print "ControlSend, , {}, 2048, , ,".format(root.children[j].move)
-                print "Sleep, 100"
-                print ";" + str(i)
-                print root.state
+                #print "Sleep, 100"
                 root = root.children[j]
                 break
+    print root.state
     
 if __name__ == '__main__':
     main()

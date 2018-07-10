@@ -1,4 +1,4 @@
-class twentyFortyEight(object):
+class TwentyFortyEight(object):
     def __init__(self):
         self.board = [[0,0,0,0],
                       [0,0,0,0],
@@ -7,7 +7,7 @@ class twentyFortyEight(object):
         #When two pieces combine then their combined score is added to the score.
         self.score = 0
         self.__addNewPiece()
-        self.dead = False
+        self.stuck = False
 
     #Our movement function is going to consider 2 steps.
     #    1. Move all the pieces in the direction specified, Moving through empty space
@@ -43,7 +43,7 @@ class twentyFortyEight(object):
                 board[i][3],board[i][2],board[i][1],board[i][0] = line[0],line[1],line[2],line[3]
 
         if (self.board == board):
-            self.dead = True
+            self.stuck = True
         else:
             self.board = board
             self.__addNewPiece()

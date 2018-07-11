@@ -46,12 +46,24 @@ class Tree(object):
     def setBestScore(self):
         if (len(self.children) == 0):
             self.bestscore = self.score
-            return self.score
+            return self.bestscore
             
         else:
             bestscore = max(map(lambda x: x.setBestScore(),self.children))
             self.bestscore = bestscore
             return bestscore   
+
+    def setSurvival(self):
+        if (len(self.children) == 0):
+            self.makeChildren()
+            if len(self.children) == 0:
+                self.bestscore = -1
+            else:
+                self.bestscore = len(self.children)
+            return self.score
+        else:
+            self.bestscore = max(map(lambda x: x.setSurvival(),self.children ))
+            return self.bestscore
         
 
 def makeChildrenTest():
@@ -76,7 +88,7 @@ def test():
 
 def main():
     print "SetTitleMatchMode, 2"
-    print "SetControlDelay, -1"
+    print "SetKeyDelay, 50"
     print ""
     print ""
     print "<^>!r::reload"
@@ -84,17 +96,16 @@ def main():
     print ""
     print "Numpad8::"
     root = Tree()
-    root.makeNDeep(11)
+    root.makeNDeep(6)
     while True:
         root.make1Deeper()
         root.setBestScore()
+        #root.setSurvival()
         for j in range(len(root.children)):
             if (root.bestscore == -1):
-                print "I never asked for this"
                 exit(0)
             if (root.children[j].bestscore == root.bestscore):
                 print "    ControlSend, , {}, 2048, , ,".format(root.children[j].move)
-                print "    Sleep, 50"
                 root = root.children[j]
                 break
     

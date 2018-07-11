@@ -36,7 +36,12 @@ class Tree(object):
             self.makeChildren()
             return
         else:
-            map(lambda x: x.make1Deeper(),self.children)
+            for i in range(len(self.children)):
+                self.children[i].makeChildren()
+                if len(self.children[i].children) == 0: 
+                    self.children[i].dead = True
+                    self.children[i].score = -1
+                
 
     def setBestScore(self):
         if (len(self.children) == 0):
@@ -70,18 +75,28 @@ def test():
     print "All tests pass!"
 
 def main():
+    print "SetTitleMatchMode, 2"
+    print "SetControlDelay, -1"
+    print ""
+    print ""
+    print "<^>!r::reload"
+    print ""
+    print ""
+    print "Numpad8::"
     root = Tree()
-    root.makeNDeep(5)
-    for i in range(50):
+    root.makeNDeep(11)
+    while True:
         root.make1Deeper()
         root.setBestScore()
         for j in range(len(root.children)):
+            if (root.bestscore == -1):
+                print "I never asked for this"
+                exit(0)
             if (root.children[j].bestscore == root.bestscore):
-                print "ControlSend, , {}, 2048, , ,".format(root.children[j].move)
-                #print "Sleep, 100"
+                print "    ControlSend, , {}, 2048, , ,".format(root.children[j].move)
+                print "    Sleep, 50"
                 root = root.children[j]
                 break
-    print root.state
     
 if __name__ == '__main__':
     main()

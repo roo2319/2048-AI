@@ -50,15 +50,15 @@ class TwentyFortyEight(object):
 
     def __crush(self,line):
         if line[0][0] == line[1][0] and line[1][0] != 0 and not(line[0][1]) and not(line[1][1]):
-            line = [(line[0][0]*2,True),(line[2][0],False),(line[3][0],False),(0,False)]
+            line = [(line[0][0]*2,True),(line[2][0],line[2][1]),(line[3][0],line[3][1]),(0,False)]
             self.score += line[0][0]
             line = self.__crush(line)
         elif line[1][0] == line[2][0] and line[1][0] != 0 and not(line[1][1]) and not(line[2][1]):
-            line = [(line[0][0],False),(line[1][0]*2,True),(line[3][0],False),(0,False)]
+            line = [(line[0][0],line[0][1]),(line[1][0]*2,True),(line[3][0],line[3][1]),(0,False)]
             self.score += line[1][0]
             line = self.__crush(line)
         elif line[2][0] == line[3][0] and line[2][0] != 0 and not(line[2][1]) and not(line[3][1]):
-            line = [(line[0][0],False),(line[1][0],False),(line[2][0]*2,True),(0,False)]
+            line = [(line[0][0],line[0][1]),(line[1][0],line[1][1]),(line[2][0]*2,True),(0,False)]
             self.score += line[2][0]
             line = self.__crush(line)
         return line

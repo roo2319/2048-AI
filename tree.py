@@ -45,7 +45,10 @@ class Tree(object):
 
     def setBestScore(self):
         if (len(self.children) == 0):
-            self.bestscore = self.score
+            if self.dead:
+                self.bestscore = -1
+            else:
+                self.bestscore = self.score
             return self.bestscore
             
         else:
@@ -55,12 +58,16 @@ class Tree(object):
 
     def setSurvival(self):
         if (len(self.children) == 0):
-            self.makeChildren()
-            if len(self.children) == 0:
-                self.bestscore = -1
+            if (self.dead):
+                pass
             else:
-                self.bestscore = len(self.children)
-            return self.score
+                self.makeChildren()
+                if len(self.children) == 0:
+                    self.bestscore = -1
+                    self.dead = True
+                else:
+                    self.bestscore = len(self.children)
+            return self.bestscore
         else:
             self.bestscore = max(map(lambda x: x.setSurvival(),self.children ))
             return self.bestscore
@@ -96,11 +103,11 @@ def main():
     print ""
     print "Numpad8::"
     root = Tree()
-    root.makeNDeep(6)
+    root.makeNDeep(10)
     while True:
-        root.make1Deeper()
-        root.setBestScore()
-        #root.setSurvival()
+        #root.make1Deeper()
+        #root.setBestScore()
+        root.setSurvival()
         for j in range(len(root.children)):
             if (root.bestscore == -1):
                 exit(0)

@@ -4,8 +4,11 @@ from copy import deepcopy
 
 class Sim2048:
 
-    def __init__(self):
-        self.board = [[0]*4,[0]*4,[0]*4,[0]*4]
+    def __init__(self,board=None):
+        if board == None:
+            self.board = [[0]*4,[0]*4,[0]*4,[0]*4]
+        else:
+            self.board = board
         self.score = 0
 
     def __str__(self):

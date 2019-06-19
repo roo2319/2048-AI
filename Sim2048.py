@@ -4,12 +4,12 @@ from copy import deepcopy
 
 class Sim2048:
 
-    def __init__(self,board=None):
+    def __init__(self,board=None,score=0):
         if board == None:
             self.board = [[0]*4,[0]*4,[0]*4,[0]*4]
         else:
             self.board = board
-        self.score = 0
+        self.score = score
 
     def __str__(self):
         return str(self.board[0]) + '\n' \
@@ -80,10 +80,22 @@ class Sim2048:
                 self.board[i][j] = 2
                 return
 
+    def getEmpty(self):
+        out = []
+        for i in range(4):
+            for j in range(4):
+                if self.board[i][j] == 0:
+                    out.append((i,j))
+        return out
                     
-
-
-
     #Remove zeros, then zero pad
     def slide(self, line):
         return list(map(lambda x: [i for i in x if  i != 0],line))
+
+
+if __name__ == "__main__":
+    print("Testing...")
+    a = Sim2048()
+    assert len(a.getEmpty()) == 16
+    print("Passed Empty length")
+    

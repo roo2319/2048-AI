@@ -1,7 +1,6 @@
 import random
 from copy import deepcopy
 
-
 class Sim2048:
 
     def __init__(self,board=None,score=0):
@@ -74,10 +73,11 @@ class Sim2048:
         return self.slide(line)
 
     def placeRandom(self):
+        number = random.choice((2,2,2,2,2,2,2,2,2,4))
         while True:
             i,j = random.randint(0,3),random.randint(0,3)
             if self.board[i][j] == 0:
-                self.board[i][j] = 2
+                self.board[i][j] = number
                 return
 
     def getEmpty(self):
@@ -88,7 +88,7 @@ class Sim2048:
                     out.append((i,j))
         return out
                     
-    #Remove zeros, then zero pad
+    #Remove zeros
     def slide(self, line):
         return list(map(lambda x: [i for i in x if  i != 0],line))
 

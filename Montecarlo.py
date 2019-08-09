@@ -2,6 +2,7 @@ from Sim2048 import Sim2048
 from randommoves import randomMovesStrategy
 from math import log
 from copy import deepcopy
+import time
 import random
 
 class MCT():
@@ -11,12 +12,57 @@ class MCT():
             self.state = Sim2048()
         else:
             self.state = state
-        self.reward = self.state.score
+        self.reward = self.getReward()
         self.descendents = 1 
         self.player = player # 1 For actual player, 0 for board
         self.expanded = False
         self.move = move
         self.children = []
+
+    def getReward(self):
+        #We want to focus on monotonicity, smoothness and empty space.
+        #Lets try, MON COLS + Smooth cols - empty
+        #Let's also change which random placements are considered
+        return self.getMon() + self.getSmooth() + 3 * self.getEmpty()
+
+    def getMon(self):
+        #Shortened form refers to entire row, long form to individual values
+        monU,monD,monL,monR = 0,0,0,0
+        for i in range(3):
+            monotoneU, monotoneD, monotoneL, monotoneR = 0,0,0,0
+            for j in range(3):
+                if self.state.board[i][j] <= self.state.board[i][j+1]:
+                    monotoneL += 1
+
+                if self.state.board[j][i] <= self.state.board[j+1][i]:
+                    monotoneD += 1
+
+                if self.state.board[i][j] >= self.state.board[i][j+1]:
+                    monotoneR += 1
+
+                if self.state.board[j][i] >= self.state.board[j+1][i]:
+                    monotoneU += 1
+            monU, monD, monL, monR = monotoneU//3, monotoneD//3, monotoneL//3, monotoneR//3
+            
+
+        return max((monotoneL,monotoneR)) + max((monotoneD,monotoneU))
+
+    def getSmooth(self):
+        smoothness = 0
+        for i in range(3):
+            rowS, colS = 0,0
+            for j in range(3):
+                if self.state.board[i][j] == self.state.board[i][j+1]:
+                    rowS += 1
+
+                if self.state.board[j][i] == self.state.board[j+1][i]:
+                    colS += 1
+            smoothness += rowS//3 + colS//3
+
+        return smoothness
+
+    def getEmpty(self):
+        return len(self.state.getEmpty())
 
 
     def selection(self):
@@ -66,7 +112,16 @@ class MCT():
 
     def optimalChild(self):
         try:
-            ucbs = list(map(lambda x:x.reward/x.descendents + 1.41 * (self.descendents/x.descendents),self.children))
+            #UCB not good with score function, Lets do 0/1 scaling
+            meanreward = [x.reward/x.descendents for x in self.children]
+            minx = min(meanreward)
+            maxx = max(meanreward) 
+            if minx == maxx:
+                scaled = meanreward
+            else:
+                scaled = [(x-minx)/(maxx-minx) for x in meanreward]
+            ucbs = [scaled[i] + 1.41 * self.descendents/self.children[i].descendents for i in range(len(self.children)) ]
+            #ucbs = list(map(lambda x:x.reward/x.descendents + 1.41 * (self.descendents/x.descendents),self.children))
             return self.children[ucbs.index(max(ucbs))]
         except ValueError:
             print(self.children)
@@ -85,11 +140,19 @@ class MCT():
     def backpropogation(self):
         pass
 
-    def search(self,n=10):
-        for i in range(n):
-            Flag = self.selection()
-            if Flag is None:
-                return None
+    def search(self,n=10,Endtime=None):
+        if Endtime is None:
+            for i in range(n):
+                Flag = self.selection()
+                if Flag is None:
+                    return None
+        else:
+            start = time.time()
+            while time.time()-start < Endtime:
+                Flag = self.selection()
+                if Flag is None:
+                    return None
+
         sims = [x.descendents for x in self.children]
         if sims == []:
             return None, None
@@ -99,7 +162,6 @@ class MCT():
     def getCont(self,simulation):
         for child in self.children:
             if child.state.board == simulation.board:
-                print ("CONT") 
                 return child
         return MCT(simulation,1)
 
@@ -111,7 +173,7 @@ while True:
     strategy = strategy.getCont(game)
     print("\n-------------------\n")
     print(game)
-    move, child = strategy.search(100)
+    move, child = strategy.search(10,1)
     if move is None:
         print (game.score)
         break
